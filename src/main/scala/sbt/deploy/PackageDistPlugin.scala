@@ -14,11 +14,11 @@ object PackageDistPlugin extends Plugin {
   }
   import Keys._
   lazy val packageDistSettings = Seq(
-    packageOptions <+= dependencyJarFiles map { files =>
+    packageOptions in (Compile, packageBin) <+= dependencyJarFiles map { files =>
       import java.util.jar.Attributes.Name.CLASS_PATH
       Package.ManifestAttributes((CLASS_PATH, files.map(_._2).mkString(" ")))
     },
-    packageOptions <+= mainClass map { mainClass =>
+    packageOptions in (Compile, packageBin) <+= mainClass map { mainClass =>
       Package.MainClass(mainClass.getOrElse(""))
     },
     packageDist <<= (streams, distPackageContents, distPackagePath) map { (out, packageContents, packagePath) =>
