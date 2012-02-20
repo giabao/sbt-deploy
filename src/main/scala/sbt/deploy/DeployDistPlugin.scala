@@ -4,11 +4,11 @@ import sbt._
 import Keys._
 
 import SecureConnectivityPlugin._
-import PackageDistPlugin.{Keys => PDP}
+import sbtassembly.Plugin._
+import AssemblyKeys._
 
 object DeployDistPlugin extends Plugin {
   object Keys {
-    val deployDist = TaskKey[Unit]("deploy-dist", "Deploy distribution package")
     val instPkgPath = TaskKey[File]("inst-pkg-path")
     val instDirParent = SettingKey[File]("inst-dir-parent")
     val instDir = TaskKey[File]("inst-dir")
@@ -21,7 +21,7 @@ object DeployDistPlugin extends Plugin {
     instDir <<= (instDirParent, name, version, scalaVersion) map { (parent, name, version, scalaVersion) =>
       new File(parent, "%s_%s-%s".format(name, scalaVersion, version))
     },
-    instPkgPath <<= (instDir, PDP.packageDist) map { (instDir, pkgPath) =>
+    instPkgPath <<= (instDir, assembly) map { (instDir, pkgPath) =>
       new File(instDir, pkgPath.getName)
     },
     latestInstDir <<= (instDir, name) map { (instDir, name) =>
@@ -32,17 +32,6 @@ object DeployDistPlugin extends Plugin {
     },
     latestInstJarPath <<= (latestInstDir, name) map { (latestInstDir, name) =>
       new File(latestInstDir, name + ".jar")
-    },
-    deployDist <<= (streams, identityFile, user, host, PDP.packageDist, instDir, latestInstDir, instJarPath, latestInstJarPath) map { 
-        (out, idFile, user, host, pkgPath, instDir, latestInstDir, instJarPath, latestInstJarPath) =>
-      scp(out.log, idFile, user, host, pkgPath, instDir.getParent)
-      ssh(out.log, idFile, user, host,
-        "cd " + instDir.getParent,
-        "rm -rf " + instDir.getName + " " + latestInstDir,
-        "unzip -q -d " + instDir.getName + " " + pkgPath.getName,
-        "ln -s " + instJarPath.getParent + " " + latestInstJarPath.getParent,
-        "ln -s " + instJarPath + " " + latestInstJarPath
-      )
     }
   )
 }
