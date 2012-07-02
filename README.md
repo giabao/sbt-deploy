@@ -17,26 +17,33 @@ Create a file, `project/plugins/build.sbt`, for plugin library dependencies with
   addSbtPlugin("fi.reaktor" %% "sbt-deploy" % "0.4.0")
 ```
 
-Then, start using the plugin by amending your settings in the build as follows:
+Then, start using the plugin by amending your settings in the build as follows. Note that <code>deploySettings</code> defines a task <code>deploy</code>, which is a sequence of tasks that shall be run in the specified order constrolled by <code>dependsOn</code>.
 
-```scala
+<pre>
+<code>
 import sbt._
-import Keys._
-
-import sbt.deploy.BasicDeployPlugin
-import sbt.deploy.BasicDeployPlugin._
-import sbt.deploy.BasicDeployPlugin.{Keys => BDP}
+import sbt.deploy.DeployDistPlugin
 
 object MyProjectBuild extends Build {
-  lazy val envSettings = Seq(
-    BDP.user := "user",
-    BDP.host := "localhost",
-    BDP.instDirParent := new File("/opt/my-project")
-  )
+  lazy val deploySettings =
+    secureConnectivitySettings ++
+    packageDistSettings ++
+    deployDistSettings ++ Seq(
+      user := prodEnvUser,
+      host := prodEnvHost,
+      instDirParent := prodEnvInstDirParent,
+    ) ++ Seq(
+      deployDist <<= deployDist dependsOn (deployInitScript),
+      deploy <<= Seq(deployDist).dependOn
+    )
   lazy val MyProject = Project(
     id = "my-project",
     base = file("."),
-    settings = Defaults.defaultSettings ++ envSettings + basicDeploySettings
+    settings = Defaults.defaultSettings ++ deploySettings
   )
+  lazy val prodEnvUser = "user"
+  lazy val prodEnvHostname = "localhost"
+  lazy val prodEnvInstDirParent = new File("/opt/my-project")
 }
-```
+</code>
+</pre>
