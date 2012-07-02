@@ -12,9 +12,9 @@ Installation and usage
 Create a file, `project/plugins/build.sbt`, for plugin library dependencies with the following lines:
 
 ```scala
-  resolvers += "sbt-deploy-repo" at "http://reaktor.github.com/sbt-deploy/maven"
+  resolvers += "sbt-deploy-repo" at "http://jackywyz.github.com/sbt-deploy/maven"
 
-  addSbtPlugin("fi.reaktor" %% "sbt-deploy" % "0.3.1-SNAPSHOT")
+  addSbtPlugin("fi.reaktor" %% "sbt-deploy" % "0.4.0")
 ```
 
 Then, start using the plugin by amending your settings in the build as follows:
