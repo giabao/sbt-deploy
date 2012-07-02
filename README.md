@@ -9,7 +9,7 @@ The sbt-deploy plugin consists of a set of plugins that provide reusable tasks a
 Installation and usage
 ----------------------
 
-Create a file, `project/plugins/build.sbt`, for plugin library dependencies with the following lines:
+Create a file, `project/plugins.sbt`, for plugin library dependencies with the following lines:
 
 ```scala
   resolvers += "sbt-deploy-repo" at "http://jackywyz.github.com/sbt-deploy/maven"
