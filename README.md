@@ -19,7 +19,7 @@ Create a file, `project/plugins/build.sbt`, for plugin library dependencies with
 
 Then, start using the plugin by amending your settings in the build as follows. Note that <code>deploySettings</code> defines a task <code>deploy</code>, which is a sequence of tasks that shall be run in the specified order constrolled by <code>dependsOn</code>.
 
-```
+```scala
 import sbt._
 import sbt.deploy.DeployDistPlugin
 
