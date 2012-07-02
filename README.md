@@ -19,8 +19,7 @@ Create a file, `project/plugins/build.sbt`, for plugin library dependencies with
 
 Then, start using the plugin by amending your settings in the build as follows. Note that <code>deploySettings</code> defines a task <code>deploy</code>, which is a sequence of tasks that shall be run in the specified order constrolled by <code>dependsOn</code>.
 
-<pre>
-<code>
+```
 import sbt._
 import sbt.deploy.DeployDistPlugin
 
@@ -45,5 +44,5 @@ object MyProjectBuild extends Build {
   lazy val prodEnvHostname = "localhost"
   lazy val prodEnvInstDirParent = new File("/opt/my-project")
 }
-</code>
-</pre>
+
+```
